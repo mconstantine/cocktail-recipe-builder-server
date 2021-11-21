@@ -1,18 +1,15 @@
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class TechniqueRange extends BaseModel {
+export default class IngredientRange extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public techniqueId: number
+  public ingredientId: number
 
   @column()
   public unitId: number
 
   @column()
-  public min: number
-
-  @column()
-  public max: number
+  public amount: number
 }

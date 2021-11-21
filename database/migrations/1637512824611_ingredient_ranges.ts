@@ -1,17 +1,17 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
-export default class TechniqueRanges extends BaseSchema {
-  protected tableName = 'technique_ranges'
+export default class IngredientRanges extends BaseSchema {
+  protected tableName = 'ingredient_ranges'
 
   public async up() {
     this.schema.createTable(this.tableName, table => {
       table.increments('id').primary()
 
       table
-        .integer('technique_id')
+        .integer('ingredient_id')
         .unsigned()
         .notNullable()
-        .references('techniques.id')
+        .references('ingredients.id')
         .onDelete('CASCADE')
 
       table
@@ -21,10 +21,9 @@ export default class TechniqueRanges extends BaseSchema {
         .references('units.id')
         .onDelete('CASCADE')
 
-      table.float('min').notNullable()
-      table.float('max').notNullable()
+      table.float('amount').notNullable()
 
-      table.unique(['technique_id', 'unit_id'])
+      table.unique(['ingredient_id', 'unit_id'])
     })
   }
 

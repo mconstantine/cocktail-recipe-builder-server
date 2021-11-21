@@ -1,6 +1,6 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import Technique, { TechniqueCode } from 'App/Models/Technique'
-import Unit from 'App/Models/Unit'
+import Unit, { UnitType } from 'App/Models/Unit'
 
 export default class TechniqueSeeder extends BaseSeeder {
   public async run() {
@@ -14,16 +14,22 @@ export default class TechniqueSeeder extends BaseSeeder {
         { name: 'Carbonated', code: TechniqueCode.CARBONATED },
       ])
 
-    const [volume, abv, sugar, acid, dilution] = await Unit.createMany([
-      { name: 'Volume', unit: 'oz' },
-      { name: 'ABV', unit: '%' },
-      { name: 'Sugar', unit: 'g/100ml' },
-      { name: 'Acid', unit: '%' },
-      { name: 'Dilution', unit: '%' },
+    const [oz, abv, sugar, acid, dilution] = await Unit.createMany([
+      { name: 'Volume', unit: 'oz', type: UnitType.VOLUME, ml: 30 },
+      { name: 'ABV', unit: '%', type: UnitType.PERCENTAGE },
+      { name: 'Sugar', unit: '%', type: UnitType.PERCENTAGE },
+      { name: 'Acid', unit: '%', type: UnitType.PERCENTAGE },
+      { name: 'Dilution', unit: '%', type: UnitType.PERCENTAGE },
+      { name: 'Volume', unit: 'ml', type: UnitType.VOLUME, ml: 1 },
+      { name: 'Volume', unit: 'cl', type: UnitType.VOLUME, ml: 10 },
+      { name: 'Volume', unit: 'part', type: UnitType.PERCENTAGE },
+      { name: 'Volume', unit: 'dash', type: UnitType.VOLUME, ml: 0.9 },
+      { name: 'Volume', unit: 'drop', type: UnitType.VOLUME, ml: 0.05 },
+      { name: 'Volume', unit: 'tsp', type: UnitType.VOLUME, ml: 5 },
     ])
 
     await built.related('ranges').createMany([
-      { unitId: volume.id, min: 2.33, max: 2.5 },
+      { unitId: oz.id, min: 2.33, max: 2.5 },
       { unitId: abv.id, min: 34, max: 40 },
       { unitId: sugar.id, min: 9.5, max: 9.5 },
       { unitId: acid.id, min: 0, max: 0 },
@@ -31,7 +37,7 @@ export default class TechniqueSeeder extends BaseSeeder {
     ])
 
     await stirred.related('ranges').createMany([
-      { unitId: volume.id, min: 3, max: 3.25 },
+      { unitId: oz.id, min: 3, max: 3.25 },
       { unitId: abv.id, min: 29, max: 43 },
       { unitId: sugar.id, min: 5.3, max: 8 },
       { unitId: acid.id, min: 0.15, max: 0.2 },
@@ -39,7 +45,7 @@ export default class TechniqueSeeder extends BaseSeeder {
     ])
 
     await shaken.related('ranges').createMany([
-      { unitId: volume.id, min: 3.25, max: 3.75 },
+      { unitId: oz.id, min: 3.25, max: 3.75 },
       { unitId: abv.id, min: 23, max: 31.5 },
       { unitId: sugar.id, min: 8, max: 13.5 },
       { unitId: acid.id, min: 1.2, max: 1.4 },
@@ -47,7 +53,7 @@ export default class TechniqueSeeder extends BaseSeeder {
     ])
 
     await shakenWithEgg.related('ranges').createMany([
-      { unitId: volume.id, min: 4.33, max: 4.75 },
+      { unitId: oz.id, min: 4.33, max: 4.75 },
       { unitId: abv.id, min: 18, max: 23 },
       { unitId: sugar.id, min: 10, max: 13.2 },
       { unitId: acid.id, min: 0.73, max: 1 },
@@ -55,7 +61,7 @@ export default class TechniqueSeeder extends BaseSeeder {
     ])
 
     await blended.related('ranges').createMany([
-      { unitId: volume.id, min: 0.75, max: 0.75 },
+      { unitId: oz.id, min: 0.75, max: 0.75 },
       { unitId: abv.id, min: 28.6, max: 32.8 },
       { unitId: sugar.id, min: 15, max: 15.4 },
       { unitId: acid.id, min: 1.08, max: 1.09 },
@@ -63,7 +69,7 @@ export default class TechniqueSeeder extends BaseSeeder {
     ])
 
     await carbonated.related('ranges').createMany([
-      { unitId: volume.id, min: 5, max: 5 },
+      { unitId: oz.id, min: 5, max: 5 },
       { unitId: abv.id, min: 14, max: 16 },
       { unitId: sugar.id, min: 5, max: 7.5 },
       { unitId: acid.id, min: 0.38, max: 0.51 },

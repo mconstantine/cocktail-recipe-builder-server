@@ -1,16 +1,18 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import { TechniqueCode } from 'App/Models/Technique'
 
-export default class Techniques extends BaseSchema {
-  protected tableName = 'techniques'
+export default class Ingredients extends BaseSchema {
+  protected tableName = 'ingredients'
 
   public async up() {
     this.schema.createTable(this.tableName, table => {
       table.increments('id').primary()
       table.string('name').notNullable()
-      table.enum('code', Object.keys(TechniqueCode)).notNullable()
 
-      table.unique(['code'])
+      /**
+       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
+       */
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
     })
   }
 
