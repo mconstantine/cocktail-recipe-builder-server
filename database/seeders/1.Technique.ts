@@ -15,17 +15,17 @@ export default class TechniqueSeeder extends BaseSeeder {
       ])
 
     const [oz, abv, sugar, acid, dilution] = await Unit.createMany([
-      { name: 'Volume', unit: 'oz', type: UnitType.VOLUME, ml: 30 },
+      { name: 'Ounce', unit: 'oz', type: UnitType.VOLUME, ml: 30 },
       { name: 'ABV', unit: '%', type: UnitType.PERCENTAGE },
       { name: 'Sugar', unit: '%', type: UnitType.PERCENTAGE },
       { name: 'Acid', unit: '%', type: UnitType.PERCENTAGE },
       { name: 'Dilution', unit: '%', type: UnitType.PERCENTAGE },
-      { name: 'Volume', unit: 'ml', type: UnitType.VOLUME, ml: 1 },
-      { name: 'Volume', unit: 'cl', type: UnitType.VOLUME, ml: 10 },
-      { name: 'Volume', unit: 'part', type: UnitType.PERCENTAGE },
-      { name: 'Volume', unit: 'dash', type: UnitType.VOLUME, ml: 0.9 },
-      { name: 'Volume', unit: 'drop', type: UnitType.VOLUME, ml: 0.05 },
-      { name: 'Volume', unit: 'tsp', type: UnitType.VOLUME, ml: 5 },
+      { name: 'Milliliter', unit: 'ml', type: UnitType.VOLUME, ml: 1 },
+      { name: 'Centiliter', unit: 'cl', type: UnitType.VOLUME, ml: 10 },
+      { name: 'Part', unit: 'part', type: UnitType.PERCENTAGE },
+      { name: 'Dash', unit: 'dash', type: UnitType.VOLUME, ml: 0.9 },
+      { name: 'Drop', unit: 'drop', type: UnitType.VOLUME, ml: 0.05 },
+      { name: 'Teaspoon', unit: 'tsp', type: UnitType.VOLUME, ml: 5 },
     ])
 
     await built.related('ranges').createMany([

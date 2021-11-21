@@ -10,6 +10,7 @@ export default class IngredientSeeder extends BaseSeeder {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14.5, 0, 0, 0, 31, 40, 40, 40, 34, 32.5, 44,
       35, 34, 41.2, 16, 16, 16.5, 19.5, 19.5, 18.5, 18.75, 18.5, 18.75, 18.5,
       18.5, 18.5, 41.3, 40, 42, 42.5, 40, 40, 40, 40, 40, 40, 40, 40, 40, 45,
+      50, 0, 0, 47, 0, 0,
     ]
 
     const sugars = [
@@ -18,7 +19,7 @@ export default class IngredientSeeder extends BaseSeeder {
       1.6, 0, 1.6, 12.4, 61.5, 42.1, 61.5, 61.5, 61.5, 61.5, 87.5, 61.5, 85.5,
       61.5, 61.5, 0.2, 6, 0, 12.3, 0, 0, 0, 0, 0, 16.5, 18.5, 18.5, 0, 0, 2.5,
       2.5, 2.5, 2.5, 2.5, 25, 80, 60, 127.5, 160, 160, 212, 3, 0, 0, 0, 0, 0,
-      20, 20, 20, 0, 0, 0, 0, 0,
+      20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ]
 
     const acids = [
@@ -26,7 +27,7 @@ export default class IngredientSeeder extends BaseSeeder {
       0, 0, 0, 0, 1.25, 0.5, 3.6, 0.93, 2.4, 0.66, 0.8, 1.5, 1.25, 6, 6, 6, 6,
       6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.55, 0, 1.5, 4.5, 0.75, 0, 0, 0, 0,
       0.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ]
 
     const ingredients = await Ingredient.createMany([
@@ -51,8 +52,8 @@ export default class IngredientSeeder extends BaseSeeder {
       { name: 'Drambuie' },
       { name: 'Fernet Branca' },
       { name: 'Luxardo Maraschino' },
-      { name: 'Angostura' },
-      { name: 'Peychauds' },
+      { name: 'Angostura bitters' },
+      { name: 'Peychauds bitters' },
       { name: "Ashmead's Kernel apple juice" },
       { name: 'Concord grape juice' },
       { name: 'Cranberry juice' },
@@ -63,7 +64,7 @@ export default class IngredientSeeder extends BaseSeeder {
       { name: 'Strawberry juice' },
       { name: 'Wickson apple juice' },
       { name: 'Champagne acid' },
-      { name: 'Lemon jiuce' },
+      { name: 'Lemon juice' },
       { name: 'Lime acid orange' },
       { name: 'Lime juice' },
       { name: 'Orange juice, lime strength' },
@@ -118,6 +119,12 @@ export default class IngredientSeeder extends BaseSeeder {
       { name: 'Generic Cognac' },
       { name: 'Generic Brandy' },
       { name: 'Generic Mezcal' },
+      { name: 'Rittenhouse rye' },
+      { name: 'Saline solution' },
+      { name: 'Egg white' },
+      { name: 'Elijah Craig 12yo bourbon' },
+      { name: 'Water' },
+      { name: 'Hellfire bitters' },
     ])
 
     console.assert(abvs.length === ingredients.length)
