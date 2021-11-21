@@ -8,21 +8,25 @@ export default class IngredientSeeder extends BaseSeeder {
       16.5, 16, 17.5, 16, 17.5, 16.5, 17, 16, 30, 15, 11, 40, 24, 55, 40, 40,
       24, 20, 40, 39, 32, 44.7, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14.5, 0, 0, 0, 31, 40, 40, 40, 34, 32.5, 44,
-      35, 34, 41.2,
+      35, 34, 41.2, 16, 16, 16.5, 19.5, 19.5, 18.5, 18.75, 18.5, 18.75, 18.5,
+      18.5, 18.5, 41.3, 40, 42, 42.5, 40, 40, 40, 40, 40, 40, 40, 40, 40, 45,
     ]
 
     const sugars = [
       16, 13, 3, 13, 3, 16, 9.5, 16, 16, 20, 24, 24.5, 24, 25, 31.2, 25, 39.5,
       37.5, 30, 8, 35, 4.2, 5, 14.7, 18, 13.3, 13, 10.4, 13.8, 12.4, 8, 14.7, 0,
       1.6, 0, 1.6, 12.4, 61.5, 42.1, 61.5, 61.5, 61.5, 61.5, 87.5, 61.5, 85.5,
-      61.5, 61.5, 0.2, 6, 0, 12.3, 0, 0, 0, 0, 0, 16.5, 18.5, 18.5, 0, 0,
+      61.5, 61.5, 0.2, 6, 0, 12.3, 0, 0, 0, 0, 0, 16.5, 18.5, 18.5, 0, 0, 2.5,
+      2.5, 2.5, 2.5, 2.5, 25, 80, 60, 127.5, 160, 160, 212, 3, 0, 0, 0, 0, 0,
+      20, 20, 20, 0, 0, 0, 0, 0,
     ]
 
     const acids = [
       0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 1.25, 0.5, 3.6, 0.93, 2.4, 0.66, 0.8, 1.5, 1.25, 6, 6, 6, 6,
       6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.55, 0, 1.5, 4.5, 0.75, 0, 0, 0, 0,
-      0.25, 0, 0, 0, 0,
+      0.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0,
     ]
 
     const ingredients = await Ingredient.createMany([
@@ -88,7 +92,37 @@ export default class IngredientSeeder extends BaseSeeder {
       { name: 'Sugared 80 proof' },
       { name: 'Tea Vodka' },
       { name: 'Turmeric Gin' },
+      { name: 'Generic Fino Sherry' },
+      { name: 'Generic Manzanilla Sherry' },
+      { name: 'Generic Amontillado Sherry' },
+      { name: 'Generic Palo Cortado Sherry' },
+      { name: 'Generic Oloroso Sherry' },
+      { name: 'Generic Dry Sherry' },
+      { name: 'Generic Pale Cream Sherry' },
+      { name: 'Generic Medium Sherry' },
+      { name: 'Generic Cream Sherry' },
+      { name: 'Generic Sweet Sherry' },
+      { name: 'Generic Moscatel Sherry' },
+      { name: 'Generic Pedro Ximénez Sherry' },
+      { name: 'Generic Pisco' },
+      { name: 'Generic Old Tom Gin' },
+      { name: 'Generic Dry Gin' },
+      { name: 'Generic Rye Whisky' },
+      { name: 'Generic Bourbon Whisky' },
+      { name: 'Generic Scotch Whisky' },
+      { name: 'Generic white Rum' },
+      { name: 'Generic dark Rum' },
+      { name: 'Generic Rum Agricole' },
+      { name: 'Generic Vodka' },
+      { name: 'Generic Tequila' },
+      { name: 'Generic Cognac' },
+      { name: 'Generic Brandy' },
+      { name: 'Generic Mezcal' },
     ])
+
+    console.assert(abvs.length === ingredients.length)
+    console.assert(sugars.length === ingredients.length)
+    console.assert(acids.length === ingredients.length)
 
     const units = await Unit.all()
     const abv = units.find(({ name }) => name === 'ABV')!
