@@ -1,13 +1,5 @@
-import {
-  BaseModel,
-  column,
-  HasMany,
-  hasMany,
-  HasManyThrough,
-  hasManyThrough,
-} from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import TechniqueRange from './TechniqueRange'
-import Unit from './Unit'
 
 export enum TechniqueCode {
   BUILT = 'BUILT',
@@ -30,7 +22,4 @@ export default class Technique extends BaseModel {
 
   @hasMany(() => TechniqueRange)
   public ranges: HasMany<typeof TechniqueRange>
-
-  @hasManyThrough([() => Unit, () => TechniqueRange])
-  public units: HasManyThrough<typeof Unit>
 }

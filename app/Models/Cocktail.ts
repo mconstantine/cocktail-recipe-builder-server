@@ -1,14 +1,14 @@
 import { DateTime } from 'luxon'
 import {
   BaseModel,
+  BelongsTo,
+  belongsTo,
   column,
-  HasOne,
-  hasOne,
-  ManyToMany,
-  manyToMany,
+  HasMany,
+  hasMany,
 } from '@ioc:Adonis/Lucid/Orm'
-import Ingredient from './Ingredient'
 import Technique from './Technique'
+import CocktailIngredient from './CocktailIngredient'
 
 export default class Cocktail extends BaseModel {
   @column({ isPrimary: true })
@@ -26,9 +26,9 @@ export default class Cocktail extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @hasOne(() => Technique)
-  public technique: HasOne<typeof Technique>
+  @belongsTo(() => Technique)
+  public technique: BelongsTo<typeof Technique>
 
-  @manyToMany(() => Ingredient)
-  public ingredients: ManyToMany<typeof Ingredient>
+  @hasMany(() => CocktailIngredient)
+  public ingredients: HasMany<typeof CocktailIngredient>
 }

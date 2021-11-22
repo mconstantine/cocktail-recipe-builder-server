@@ -14,17 +14,17 @@ export default class CocktailIngredient extends BaseModel {
   public ingredientId: number
 
   @column()
-  public amount: number
-
-  @column()
   public unitId: number
 
-  @hasOne(() => Cocktail)
+  @column()
+  public amount: number
+
+  @hasOne(() => Cocktail, { localKey: 'cocktailId', foreignKey: 'id' })
   public cocktail: HasOne<typeof Cocktail>
 
-  @hasOne(() => Ingredient)
+  @hasOne(() => Ingredient, { localKey: 'ingredientId', foreignKey: 'id' })
   public ingredient: HasOne<typeof Ingredient>
 
-  @hasOne(() => Unit)
+  @hasOne(() => Unit, { localKey: 'unitId', foreignKey: 'id' })
   public unit: HasOne<typeof Unit>
 }

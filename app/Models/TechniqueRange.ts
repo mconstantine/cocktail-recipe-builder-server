@@ -1,4 +1,6 @@
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Technique from './Technique'
+import Unit from './Unit'
 
 export default class TechniqueRange extends BaseModel {
   @column({ isPrimary: true })
@@ -15,4 +17,10 @@ export default class TechniqueRange extends BaseModel {
 
   @column()
   public max: number
+
+  @belongsTo(() => Technique)
+  public technique: BelongsTo<typeof Technique>
+
+  @belongsTo(() => Unit)
+  public unit: BelongsTo<typeof Unit>
 }
