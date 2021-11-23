@@ -73,7 +73,7 @@ export default class TechniqueSeeder extends BaseSeeder {
       { unitId: abv.id, min: 14, max: 16 },
       { unitId: sugar.id, min: 5, max: 7.5 },
       { unitId: acid.id, min: 0.38, max: 0.51 },
-      { unitId: dilution.id, min: 0, max: 0 },
+      { unitId: dilution.id, min: 51, max: 60 },
     ])
   }
 }
