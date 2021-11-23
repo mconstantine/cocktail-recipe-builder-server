@@ -7,7 +7,7 @@ export default class IngredientsController {
     const page = request.input('page') || 1
     const perPage = request.input('perPage') || 20
 
-    let match = Ingredient.query().select('id', 'name')
+    let match = Ingredient.query().select('id', 'name').orderBy('name')
 
     if (query) {
       match = match.where('name', 'like', `%${query}%`)
