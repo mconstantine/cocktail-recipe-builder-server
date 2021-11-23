@@ -21,3 +21,4 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.resource('ingredients', 'IngredientsController').only(['index', 'show'])
+Route.resource('cocktails', 'CocktailsController').only(['index', 'show'])
