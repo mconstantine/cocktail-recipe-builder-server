@@ -2,6 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Ingredient from 'App/Models/Ingredient'
 import Unit from 'App/Models/Unit'
 import IngredientStoreValidator from 'App/Validators/IngredientStoreValidator'
+import IngredientUpdateValidator from 'App/Validators/IngredientUpdateValidator'
 
 export default class IngredientsController {
   public async index({ request }: HttpContextContract) {
@@ -44,7 +45,7 @@ export default class IngredientsController {
       },
     ])
 
-    return await IngredientsController.formatIngredient(ingredient.id)
+    return await IngredientsController.getAndFormatIngredient(ingredient.id)
   }
 
   public async show({ request }: HttpContextContract) {
@@ -52,16 +53,26 @@ export default class IngredientsController {
     return await IngredientsController.formatIngredient(id)
   }
 
-  public async update({}: HttpContextContract) {}
+  public async update({ request }: HttpContextContract) {
+    const id = request.param('id')
+    const data = await request.validate(IngredientUpdateValidator)
+    const result = await IngredientsController.getIngredient(id)
+
+    await result.merge(data).save()
+
+    return await IngredientsController.formatIngredient(result)
+  }
 
   public async destroy({}: HttpContextContract) {}
 
-  static async formatIngredient(id: number) {
-    const ingredient = await Ingredient.query()
+  static async getIngredient(id: number) {
+    return await Ingredient.query()
       .preload('ranges', query => query.preload('unit'))
       .where('id', id)
       .firstOrFail()
+  }
 
+  static async formatIngredient(ingredient: Ingredient) {
     return ingredient.serialize({
       relations: {
         ranges: {
@@ -69,5 +80,10 @@ export default class IngredientsController {
         },
       },
     })
+  }
+
+  static async getAndFormatIngredient(id: number) {
+    const ingredient = await IngredientsController.getIngredient(id)
+    return await IngredientsController.formatIngredient(ingredient)
   }
 }
