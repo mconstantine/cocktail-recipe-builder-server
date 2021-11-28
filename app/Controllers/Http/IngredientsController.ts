@@ -1,5 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Ingredient from 'App/Models/Ingredient'
+import Unit from 'App/Models/Unit'
+import IngredientStoreValidator from 'App/Validators/IngredientStoreValidator'
 
 export default class IngredientsController {
   public async index({ request }: HttpContextContract) {
@@ -16,11 +18,45 @@ export default class IngredientsController {
     return await match.paginate(page, perPage)
   }
 
-  public async store({}: HttpContextContract) {}
+  public async store({ request }: HttpContextContract) {
+    const abvRange = await Unit.findByOrFail('name', 'ABV')
+    const sugarRange = await Unit.findByOrFail('name', 'Sugar')
+    const acidRange = await Unit.findByOrFail('name', 'Acid')
+
+    const { name, abv, sugar, acid } = await request.validate(
+      IngredientStoreValidator,
+    )
+
+    const ingredient = await Ingredient.create({ name })
+
+    await ingredient.related('ranges').createMany([
+      {
+        unitId: abvRange.id,
+        amount: abv,
+      },
+      {
+        unitId: sugarRange.id,
+        amount: sugar,
+      },
+      {
+        unitId: acidRange.id,
+        amount: acid,
+      },
+    ])
+
+    return await IngredientsController.formatIngredient(ingredient.id)
+  }
 
   public async show({ request }: HttpContextContract) {
     const id = request.param('id')
+    return await IngredientsController.formatIngredient(id)
+  }
 
+  public async update({}: HttpContextContract) {}
+
+  public async destroy({}: HttpContextContract) {}
+
+  static async formatIngredient(id: number) {
     const ingredient = await Ingredient.query()
       .preload('ranges', query => query.preload('unit'))
       .where('id', id)
@@ -34,8 +70,4 @@ export default class IngredientsController {
       },
     })
   }
-
-  public async update({}: HttpContextContract) {}
-
-  public async destroy({}: HttpContextContract) {}
 }
