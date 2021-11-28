@@ -63,7 +63,14 @@ export default class IngredientsController {
     return await IngredientsController.formatIngredient(result)
   }
 
-  public async destroy({}: HttpContextContract) {}
+  public async destroy({ request }: HttpContextContract) {
+    const id = request.param('id')
+    const ingredient = await IngredientsController.getIngredient(id)
+
+    await ingredient.delete()
+
+    return IngredientsController.formatIngredient(ingredient)
+  }
 
   static async getIngredient(id: number) {
     return await Ingredient.query()
