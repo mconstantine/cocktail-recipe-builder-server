@@ -50,7 +50,7 @@ export default class IngredientsController {
 
   public async show({ request }: HttpContextContract) {
     const id = request.param('id')
-    return await IngredientsController.formatIngredient(id)
+    return await IngredientsController.getIngredient(id)
   }
 
   public async update({ request }: HttpContextContract) {
