@@ -55,10 +55,37 @@ export default class IngredientsController {
 
   public async update({ request }: HttpContextContract) {
     const id = request.param('id')
-    const data = await request.validate(IngredientUpdateValidator)
     const result = await IngredientsController.getIngredient(id)
+    const newRanges: Array<{ id: number; amount: number }> = []
 
-    await result.merge(data).save()
+    const { name, abv, sugar, acid } = await request.validate(
+      IngredientUpdateValidator,
+    )
+
+    if (name) {
+      await result.merge({ name: name || result.name }).save()
+    }
+
+    if (abv) {
+      const { id } = await Unit.findByOrFail('name', 'ABV')
+      newRanges.push({ id, amount: abv })
+    }
+
+    if (sugar) {
+      const { id } = await Unit.findByOrFail('name', 'Sugar')
+      newRanges.push({ id, amount: sugar })
+    }
+
+    if (acid) {
+      const { id } = await Unit.findByOrFail('name', 'Acid')
+      newRanges.push({ id, amount: acid })
+    }
+
+    newRanges.length &&
+      (await result.related('ranges').updateOrCreateMany(
+        newRanges.map(({ id, amount }) => ({ unitId: id, amount })),
+        'unitId',
+      ))
 
     return await IngredientsController.formatIngredient(result)
   }
