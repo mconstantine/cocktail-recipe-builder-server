@@ -19,6 +19,12 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import packageJson from '../package.json'
+
+Route.get('/', () => {
+  const { name, version } = packageJson
+  return { name, version }
+})
 
 Route.resource('ingredients', 'IngredientsController').only(['index', 'show'])
 Route.resource('cocktails', 'CocktailsController').only(['index', 'show'])
