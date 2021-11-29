@@ -31,4 +31,5 @@ Route.resource('cocktails', 'CocktailsController').only([
   'index',
   'show',
   'store',
+  'update',
 ])

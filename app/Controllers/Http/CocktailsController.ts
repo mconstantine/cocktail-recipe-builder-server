@@ -5,6 +5,9 @@ import Technique from 'App/Models/Technique'
 import CocktailStoreValidator from 'App/Validators/CocktailStoreValidator'
 import { Exception } from '@adonisjs/core/build/standalone'
 import Unit from 'App/Models/Unit'
+import CocktailUpdateValidator from 'App/Validators/CocktailUpdateValidator'
+import Database from '@ioc:Adonis/Lucid/Database'
+import CocktailIngredient from 'App/Models/CocktailIngredient'
 
 export default class CocktailsController {
   public async index({ request }: HttpContextContract) {
@@ -50,7 +53,6 @@ export default class CocktailsController {
 
     await cocktail.related('ingredients').createMany(
       data.ingredients.map(ingredient => ({
-        cocktailId: cocktail.id,
         ingredientId: ingredient.id,
         amount: ingredient.amount,
         unitId: units.find(({ unit }) => unit === ingredient.unit)!.id,
@@ -65,7 +67,86 @@ export default class CocktailsController {
     return await CocktailsController.getAndFormatCocktail(id)
   }
 
-  public async update({}: HttpContextContract) {}
+  public async update({ request }: HttpContextContract) {
+    const data = await request.validate(CocktailUpdateValidator)
+    const id = request.param('id')
+
+    const cocktail = await Cocktail.query()
+      .where('id', id)
+      .preload('ingredients')
+      .firstOrFail()
+
+    await Database.transaction(async trx => {
+      cocktail.useTransaction(trx)
+
+      if (data.name) {
+        cocktail.name = data.name
+      }
+
+      if (data.technique_code) {
+        const technique = await Technique.findByOrFail(
+          'code',
+          data.technique_code,
+          { client: trx },
+        )
+        cocktail.techniqueId = technique.id
+      }
+
+      if (data.ingredients) {
+        const ingredients = await Ingredient.query({ client: trx }).whereIn(
+          'id',
+          data.ingredients.map(({ id }) => id),
+        )
+
+        if (ingredients.length !== data.ingredients.length) {
+          throw new Exception('Invalid ingredients', 400, 'E_ROW_NOT_FOUND')
+        }
+
+        const providedUnits = [
+          ...new Set(data.ingredients.map(({ unit }) => unit)),
+        ]
+        const units = await Unit.query({ client: trx }).whereIn(
+          // @ts-ignore
+          'unit',
+          providedUnits,
+        )
+
+        if (providedUnits.length !== units.length) {
+          throw new Exception('Invalid units', 400, 'E_ROW_NOT_FOUND')
+        }
+
+        await cocktail.related('ingredients').updateOrCreateMany(
+          data.ingredients.map(ingredient => ({
+            ingredientId: ingredient.id,
+            amount: ingredient.amount,
+            unitId: units.find(({ unit }) => unit === ingredient.unit)!.id,
+          })),
+          ['cocktailId', 'ingredientId'],
+        )
+
+        if (cocktail.ingredients.length !== data.ingredients.length) {
+          const toDelete = cocktail.ingredients.filter(
+            ({ ingredientId }) =>
+              !data.ingredients!.find(({ id }) => ingredientId === id),
+          )
+
+          if (toDelete.length) {
+            await CocktailIngredient.query({ client: trx })
+              .where('cocktailId', cocktail.id)
+              .whereIn(
+                'ingredientId',
+                toDelete.map(({ ingredientId }) => ingredientId),
+              )
+              .delete()
+          }
+        }
+      }
+
+      await cocktail.save()
+    })
+
+    return CocktailsController.getAndFormatCocktail(cocktail.id)
+  }
 
   public async destroy({}: HttpContextContract) {}
 
