@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Database from '@ioc:Adonis/Lucid/Database'
 import Ingredient from 'App/Models/Ingredient'
 import Unit from 'App/Models/Unit'
 import IngredientStoreValidator from 'App/Validators/IngredientStoreValidator'
@@ -56,36 +57,43 @@ export default class IngredientsController {
   public async update({ request }: HttpContextContract) {
     const id = request.param('id')
     const result = await IngredientsController.getIngredient(id)
-    const newRanges: Array<{ id: number; amount: number }> = []
 
     const { name, abv, sugar, acid } = await request.validate(
       IngredientUpdateValidator,
     )
 
-    if (name) {
-      await result.merge({ name: name || result.name }).save()
-    }
+    await Database.transaction(async trx => {
+      const newRanges: Array<{ id: number; amount: number }> = []
 
-    if (abv) {
-      const { id } = await Unit.findByOrFail('name', 'ABV')
-      newRanges.push({ id, amount: abv })
-    }
+      result.useTransaction(trx)
 
-    if (sugar) {
-      const { id } = await Unit.findByOrFail('name', 'Sugar')
-      newRanges.push({ id, amount: sugar })
-    }
+      if (name) {
+        result.merge({ name: name || result.name })
+      }
 
-    if (acid) {
-      const { id } = await Unit.findByOrFail('name', 'Acid')
-      newRanges.push({ id, amount: acid })
-    }
+      if (abv) {
+        const { id } = await Unit.findByOrFail('name', 'ABV')
+        newRanges.push({ id, amount: abv })
+      }
 
-    newRanges.length &&
-      (await result.related('ranges').updateOrCreateMany(
-        newRanges.map(({ id, amount }) => ({ unitId: id, amount })),
-        'unitId',
-      ))
+      if (sugar) {
+        const { id } = await Unit.findByOrFail('name', 'Sugar')
+        newRanges.push({ id, amount: sugar })
+      }
+
+      if (acid) {
+        const { id } = await Unit.findByOrFail('name', 'Acid')
+        newRanges.push({ id, amount: acid })
+      }
+
+      newRanges.length &&
+        (await result.related('ranges').updateOrCreateMany(
+          newRanges.map(({ id, amount }) => ({ unitId: id, amount })),
+          'unitId',
+        ))
+
+      await result.save()
+    })
 
     return await IngredientsController.formatIngredient(result)
   }
