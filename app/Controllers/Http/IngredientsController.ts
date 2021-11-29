@@ -56,46 +56,46 @@ export default class IngredientsController {
 
   public async update({ request }: HttpContextContract) {
     const id = request.param('id')
-    const result = await IngredientsController.getIngredient(id)
+    const ingredient = await Ingredient.query().where('id', id).firstOrFail()
 
     const { name, abv, sugar, acid } = await request.validate(
       IngredientUpdateValidator,
     )
 
     await Database.transaction(async trx => {
-      const newRanges: Array<{ id: number; amount: number }> = []
+      const newRanges: Array<{ unitId: number; amount: number }> = []
 
-      result.useTransaction(trx)
+      ingredient.useTransaction(trx)
 
       if (name) {
-        result.merge({ name: name || result.name })
+        ingredient.merge({ name: name || ingredient.name })
       }
 
       if (abv) {
-        const { id } = await Unit.findByOrFail('name', 'ABV')
-        newRanges.push({ id, amount: abv })
+        const { id } = await Unit.findByOrFail('name', 'ABV', { client: trx })
+        newRanges.push({ unitId: id, amount: abv })
       }
 
       if (sugar) {
-        const { id } = await Unit.findByOrFail('name', 'Sugar')
-        newRanges.push({ id, amount: sugar })
+        const { id } = await Unit.findByOrFail('name', 'Sugar', { client: trx })
+        newRanges.push({ unitId: id, amount: sugar })
       }
 
       if (acid) {
-        const { id } = await Unit.findByOrFail('name', 'Acid')
-        newRanges.push({ id, amount: acid })
+        const { id } = await Unit.findByOrFail('name', 'Acid', { client: trx })
+        newRanges.push({ unitId: id, amount: acid })
       }
 
-      newRanges.length &&
-        (await result.related('ranges').updateOrCreateMany(
-          newRanges.map(({ id, amount }) => ({ unitId: id, amount })),
-          'unitId',
-        ))
+      if (newRanges.length) {
+        await ingredient
+          .related('ranges')
+          .updateOrCreateMany(newRanges, 'unitId')
+      }
 
-      await result.save()
+      await ingredient.save()
     })
 
-    return await IngredientsController.formatIngredient(result)
+    return await IngredientsController.getAndFormatIngredient(ingredient.id)
   }
 
   public async destroy({ request }: HttpContextContract) {
