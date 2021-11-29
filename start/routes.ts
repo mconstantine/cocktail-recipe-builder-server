@@ -27,4 +27,8 @@ Route.get('/', () => {
 })
 
 Route.resource('ingredients', 'IngredientsController').apiOnly()
-Route.resource('cocktails', 'CocktailsController').only(['index', 'show'])
+Route.resource('cocktails', 'CocktailsController').only([
+  'index',
+  'show',
+  'store',
+])
