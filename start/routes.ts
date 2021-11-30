@@ -26,5 +26,6 @@ Route.get('/', () => {
   return { name, version }
 })
 
+Route.resource('techniques', 'TechniquesController').only(['index'])
 Route.resource('ingredients', 'IngredientsController').apiOnly()
 Route.resource('cocktails', 'CocktailsController').apiOnly()
