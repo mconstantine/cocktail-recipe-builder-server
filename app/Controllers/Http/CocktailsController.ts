@@ -148,7 +148,14 @@ export default class CocktailsController {
     return CocktailsController.getAndFormatCocktail(cocktail.id)
   }
 
-  public async destroy({}: HttpContextContract) {}
+  public async destroy({ request }: HttpContextContract) {
+    const id = request.param('id')
+    const cocktail = await CocktailsController.getCocktail(id)
+
+    await cocktail.delete()
+
+    return CocktailsController.formatCocktail(cocktail)
+  }
 
   static async getCocktail(id: number) {
     return await Cocktail.query()
