@@ -68,10 +68,10 @@ export default class TechniqueSeeder extends BaseSeeder {
     ])
 
     await carbonated.related('ranges').createMany([
-      { unitId: oz.id, min: 5, max: 5 },
-      { unitId: abv.id, min: 14, max: 16 },
-      { unitId: sugar.id, min: 5, max: 7.5 },
-      { unitId: acid.id, min: 0.38, max: 0.51 },
+      { unitId: oz.id, min: 3.12, max: 3.31 },
+      { unitId: abv.id, min: 8.75, max: 10.6 },
+      { unitId: sugar.id, min: 3.12, max: 4.97 },
+      { unitId: acid.id, min: 0.24, max: 0.34 },
       { unitId: dilution.id, min: 51, max: 60 },
     ])
   }
