@@ -22,7 +22,6 @@ export default class TechniqueSeeder extends BaseSeeder {
       { name: 'Dilution', unit: '%', type: UnitType.PERCENTAGE },
       { name: 'Milliliter', unit: 'ml', type: UnitType.VOLUME, ml: 1 },
       { name: 'Centiliter', unit: 'cl', type: UnitType.VOLUME, ml: 10 },
-      { name: 'Part', unit: 'part', type: UnitType.PERCENTAGE },
       { name: 'Dash', unit: 'dash', type: UnitType.VOLUME, ml: 0.9 },
       { name: 'Drop', unit: 'drop', type: UnitType.VOLUME, ml: 0.05 },
       { name: 'Teaspoon', unit: 'tsp', type: UnitType.VOLUME, ml: 5 },
