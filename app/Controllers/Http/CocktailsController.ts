@@ -56,6 +56,7 @@ export default class CocktailsController {
         ingredientId: ingredient.id,
         amount: ingredient.amount,
         unitId: units.find(({ unit }) => unit === ingredient.unit)!.id,
+        after_technique: ingredient.after_technique,
       })),
     )
 
@@ -119,6 +120,7 @@ export default class CocktailsController {
           data.ingredients.map(ingredient => ({
             ingredientId: ingredient.id,
             amount: ingredient.amount,
+            after_technique: ingredient.after_technique,
             unitId: units.find(({ unit }) => unit === ingredient.unit)!.id,
           })),
           ['cocktailId', 'ingredientId'],
@@ -185,7 +187,7 @@ export default class CocktailsController {
           },
         },
         ingredients: {
-          fields: ['id', 'amount'],
+          fields: ['id', 'amount', 'after_technique'],
           relations: {
             ingredient: {
               fields: ['id', 'name'],

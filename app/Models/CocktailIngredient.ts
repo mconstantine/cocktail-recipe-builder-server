@@ -19,6 +19,9 @@ export default class CocktailIngredient extends BaseModel {
   @column()
   public amount: number
 
+  @column()
+  public afterTechnique: boolean
+
   @hasOne(() => Cocktail, { localKey: 'cocktailId', foreignKey: 'id' })
   public cocktail: HasOne<typeof Cocktail>
 

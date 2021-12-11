@@ -32,6 +32,7 @@ export default class CocktailUpdateValidator {
         id: schema.number(),
         amount: schema.number.optional(),
         unit: schema.string.optional(),
+        after_technique: schema.boolean.optional(),
       }),
     ),
   })
