@@ -8,6 +8,7 @@ import Unit from 'App/Models/Unit'
 import CocktailUpdateValidator from 'App/Validators/CocktailUpdateValidator'
 import Database from '@ioc:Adonis/Lucid/Database'
 import CocktailIngredient from 'App/Models/CocktailIngredient'
+import CocktailRecipe from 'App/Models/CocktailRecipe'
 
 export default class CocktailsController {
   public async index({ request }: HttpContextContract) {
@@ -60,6 +61,12 @@ export default class CocktailsController {
       })),
     )
 
+    if (data.recipe && data.recipe.length) {
+      await cocktail
+        .related('recipe')
+        .createMany(data.recipe.map((step, index) => ({ index, step })))
+    }
+
     return await CocktailsController.getAndFormatCocktail(cocktail.id)
   }
 
@@ -75,6 +82,7 @@ export default class CocktailsController {
     const cocktail = await Cocktail.query()
       .where('id', id)
       .preload('ingredients')
+      .preload('recipe')
       .firstOrFail()
 
     await Database.transaction(async trx => {
@@ -144,6 +152,29 @@ export default class CocktailsController {
         }
       }
 
+      if (data.recipe) {
+        await cocktail.related('recipe').updateOrCreateMany(
+          data.recipe.map((step, index) => ({ step, index })),
+          ['cocktailId', 'index'],
+        )
+
+        if (cocktail.recipe.length !== data.recipe.length) {
+          const toDelete = cocktail.recipe.filter(
+            ({ index }) => index > data.recipe!.length - 1,
+          )
+
+          if (toDelete.length) {
+            await CocktailRecipe.query({ client: trx })
+              .where('cocktailId', cocktail.id)
+              .whereIn(
+                'index',
+                toDelete.map(({ index }) => index),
+              )
+              .delete()
+          }
+        }
+      }
+
       await cocktail.save()
     })
 
@@ -172,6 +203,7 @@ export default class CocktailsController {
           )
           .preload('unit'),
       )
+      .preload('recipe', query => query.orderBy('index'))
       .firstOrFail()
   }
 
@@ -198,6 +230,9 @@ export default class CocktailsController {
               },
             },
           },
+        },
+        recipe: {
+          fields: ['index', 'step'],
         },
       },
     })

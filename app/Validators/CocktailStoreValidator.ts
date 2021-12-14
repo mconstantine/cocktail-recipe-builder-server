@@ -35,6 +35,7 @@ export default class CocktailStoreValidator {
         after_technique: schema.boolean(),
       }),
     ),
+    recipe: schema.array.optional().members(schema.string()),
   })
 
   /**

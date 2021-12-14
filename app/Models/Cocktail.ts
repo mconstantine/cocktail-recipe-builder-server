@@ -9,6 +9,7 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import Technique from './Technique'
 import CocktailIngredient from './CocktailIngredient'
+import CocktailRecipe from './CocktailRecipe'
 
 export default class Cocktail extends BaseModel {
   @column({ isPrimary: true })
@@ -31,4 +32,7 @@ export default class Cocktail extends BaseModel {
 
   @hasMany(() => CocktailIngredient)
   public ingredients: HasMany<typeof CocktailIngredient>
+
+  @hasMany(() => CocktailRecipe)
+  public recipe: HasMany<typeof CocktailRecipe>
 }
