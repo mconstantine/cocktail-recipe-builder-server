@@ -21,6 +21,9 @@ export default class Cocktail extends BaseModel {
   @column()
   public techniqueId: number
 
+  @column()
+  public garnish: string | null
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

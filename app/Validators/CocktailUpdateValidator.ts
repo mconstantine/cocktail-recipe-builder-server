@@ -36,6 +36,7 @@ export default class CocktailUpdateValidator {
       }),
     ),
     recipe: schema.array.optional().members(schema.string()),
+    garnish: schema.string.optional({ trim: true }),
   })
 
   /**

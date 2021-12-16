@@ -31,7 +31,7 @@ export default class CocktailsController {
 
   public async store({ request }: HttpContextContract) {
     const data = await request.validate(CocktailStoreValidator)
-    const { name } = data
+    const { name, garnish } = data
     const technique = await Technique.findByOrFail('code', data.technique_code)
 
     const ingredients = await Ingredient.query().whereIn(
@@ -50,7 +50,11 @@ export default class CocktailsController {
       throw new Exception('Invalid units', 400, 'E_ROW_NOT_FOUND')
     }
 
-    const cocktail = await Cocktail.create({ name, techniqueId: technique.id })
+    const cocktail = await Cocktail.create({
+      name,
+      techniqueId: technique.id,
+      garnish: garnish || null,
+    })
 
     await cocktail.related('ingredients').createMany(
       data.ingredients.map(ingredient => ({
@@ -175,6 +179,10 @@ export default class CocktailsController {
         }
       }
 
+      if (data.garnish !== undefined) {
+        cocktail.garnish = data.garnish
+      }
+
       await cocktail.save()
     })
 
@@ -209,7 +217,7 @@ export default class CocktailsController {
 
   static formatCocktail(cocktail: Cocktail) {
     return cocktail.serialize({
-      fields: ['id', 'name', 'created_at', 'updated_at'],
+      fields: ['id', 'name', 'garnish', 'created_at', 'updated_at'],
       relations: {
         technique: {
           relations: {
