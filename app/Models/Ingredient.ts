@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import IngredientRange from './IngredientRange'
+import IngredientRecipe from './IngredientRecipe'
+import IngredientIngredient from './IngredientIngredient'
 
 export default class Ingredient extends BaseModel {
   @column({ isPrimary: true })
@@ -17,4 +19,10 @@ export default class Ingredient extends BaseModel {
 
   @hasMany(() => IngredientRange)
   public ranges: HasMany<typeof IngredientRange>
+
+  @hasMany(() => IngredientIngredient, { foreignKey: 'parentId' })
+  public ingredients: HasMany<typeof IngredientIngredient>
+
+  @hasMany(() => IngredientRecipe)
+  public recipe: HasMany<typeof IngredientRecipe>
 }

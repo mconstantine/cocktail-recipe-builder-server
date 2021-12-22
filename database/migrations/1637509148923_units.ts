@@ -9,7 +9,7 @@ export default class Units extends BaseSchema {
       table.increments('id').primary()
       table.string('name').notNullable()
       table.string('unit').notNullable()
-      table.enum('type', Object.keys(UnitType)).notNullable()
+      table.enum('type', [UnitType.PERCENTAGE, UnitType.VOLUME]).notNullable()
       table.float('ml').defaultTo(null)
     })
   }

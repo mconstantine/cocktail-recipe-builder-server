@@ -28,6 +28,14 @@ export default class IngredientUpdateValidator {
     abv: schema.number.optional([rules.range(0, 100)]),
     sugar: schema.number.optional([rules.range(0, 100)]),
     acid: schema.number.optional([rules.range(0, 100)]),
+    ingredients: schema.array.optional().members(
+      schema.object().members({
+        id: schema.number(),
+        amount: schema.number(),
+        unit: schema.string(),
+      }),
+    ),
+    recipe: schema.array.optional().members(schema.string()),
   })
 
   /**

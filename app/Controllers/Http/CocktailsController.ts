@@ -138,21 +138,19 @@ export default class CocktailsController {
           ['cocktailId', 'ingredientId'],
         )
 
-        if (cocktail.ingredients.length !== data.ingredients.length) {
-          const toDelete = cocktail.ingredients.filter(
-            ({ ingredientId }) =>
-              !data.ingredients!.find(({ id }) => ingredientId === id),
-          )
+        const toDelete = cocktail.ingredients.filter(
+          ({ ingredientId }) =>
+            !data.ingredients!.find(({ id }) => ingredientId === id),
+        )
 
-          if (toDelete.length) {
-            await CocktailIngredient.query({ client: trx })
-              .where('cocktailId', cocktail.id)
-              .whereIn(
-                'ingredientId',
-                toDelete.map(({ ingredientId }) => ingredientId),
-              )
-              .delete()
-          }
+        if (toDelete.length) {
+          await CocktailIngredient.query({ client: trx })
+            .where('cocktailId', cocktail.id)
+            .whereIn(
+              'ingredientId',
+              toDelete.map(({ ingredientId }) => ingredientId),
+            )
+            .delete()
         }
       }
 

@@ -3,6 +3,7 @@ import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
 export enum UnitType {
   VOLUME = 'VOLUME',
   PERCENTAGE = 'PERCENTAGE',
+  WEIGHT = 'WEIGHT',
 }
 
 export default class Unit extends BaseModel {
