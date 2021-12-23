@@ -4,7 +4,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import Ingredient from 'App/Models/Ingredient'
 import IngredientIngredient from 'App/Models/IngredientIngredient'
 import IngredientRecipe from 'App/Models/IngredientRecipe'
-import Unit from 'App/Models/Unit'
+import Unit, { UnitType } from 'App/Models/Unit'
 import IngredientStoreValidator from 'App/Validators/IngredientStoreValidator'
 import IngredientUpdateValidator from 'App/Validators/IngredientUpdateValidator'
 
@@ -40,7 +40,8 @@ export default class IngredientsController {
       if (!(await Ingredient.find(ingredientData.id))) {
         throw new Exception(
           `Ingredient with ID ${ingredientData.id} not found.`,
-          422,
+          404,
+          'E_ROW_NOT_FOUND',
         )
       }
 
@@ -51,8 +52,13 @@ export default class IngredientsController {
       if (!unit) {
         throw new Exception(
           `Unit with ID ${ingredientData.unit} not found.`,
-          422,
+          404,
+          'E_ROW_NOT_FOUND',
         )
+      }
+
+      if (unit.type !== UnitType.VOLUME && unit.type !== UnitType.WEIGHT) {
+        throw new Exception('Invalid unit type', 422, 'E_INVALID_UNIT_TYPE')
       }
 
       units[unit.unit] = unit
@@ -148,7 +154,7 @@ export default class IngredientsController {
         )
 
         if (ingredients.length !== data.ingredients.length) {
-          throw new Exception('Invalid ingredients', 400, 'E_ROW_NOT_FOUND')
+          throw new Exception('Invalid ingredients', 404, 'E_ROW_NOT_FOUND')
         }
 
         const providedUnits = [
@@ -160,7 +166,13 @@ export default class IngredientsController {
         )
 
         if (providedUnits.length !== units.length) {
-          throw new Exception('Invalid units', 400, 'E_ROW_NOT_FOUND')
+          throw new Exception('Invalid units', 404, 'E_ROW_NOT_FOUND')
+        }
+
+        for (const unit of units) {
+          if (unit.type !== UnitType.VOLUME && unit.type !== UnitType.WEIGHT) {
+            throw new Exception('Invalid unit type', 422, 'E_INVALID_UNIT_TYPE')
+          }
         }
 
         await IngredientIngredient.updateOrCreateMany(

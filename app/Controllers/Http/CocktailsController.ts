@@ -4,7 +4,7 @@ import Ingredient from 'App/Models/Ingredient'
 import Technique from 'App/Models/Technique'
 import CocktailStoreValidator from 'App/Validators/CocktailStoreValidator'
 import { Exception } from '@adonisjs/core/build/standalone'
-import Unit from 'App/Models/Unit'
+import Unit, { UnitType } from 'App/Models/Unit'
 import CocktailUpdateValidator from 'App/Validators/CocktailUpdateValidator'
 import Database from '@ioc:Adonis/Lucid/Database'
 import CocktailIngredient from 'App/Models/CocktailIngredient'
@@ -43,11 +43,17 @@ export default class CocktailsController {
     const units = await Unit.query().whereIn('unit', providedUnits)
 
     if (ingredients.length !== data.ingredients.length) {
-      throw new Exception('Invalid ingredients', 400, 'E_ROW_NOT_FOUND')
+      throw new Exception('Invalid ingredients', 404, 'E_ROW_NOT_FOUND')
     }
 
     if (providedUnits.length !== units.length) {
-      throw new Exception('Invalid units', 400, 'E_ROW_NOT_FOUND')
+      throw new Exception('Invalid units', 404, 'E_ROW_NOT_FOUND')
+    }
+
+    for (const unit of units) {
+      if (unit.type !== UnitType.VOLUME) {
+        throw new Exception('Invalid units', 422, 'E_INVALID_UNIT_TYPE')
+      }
     }
 
     const cocktail = await Cocktail.create({
@@ -112,7 +118,7 @@ export default class CocktailsController {
         )
 
         if (ingredients.length !== data.ingredients.length) {
-          throw new Exception('Invalid ingredients', 400, 'E_ROW_NOT_FOUND')
+          throw new Exception('Invalid ingredients', 404, 'E_ROW_NOT_FOUND')
         }
 
         const providedUnits = [
@@ -125,7 +131,13 @@ export default class CocktailsController {
         )
 
         if (providedUnits.length !== units.length) {
-          throw new Exception('Invalid units', 400, 'E_ROW_NOT_FOUND')
+          throw new Exception('Invalid units', 404, 'E_ROW_NOT_FOUND')
+        }
+
+        for (const unit of units) {
+          if (unit.type !== UnitType.VOLUME) {
+            throw new Exception('Invalid units', 422, 'E_INVALID_UNIT_TYPE')
+          }
         }
 
         await cocktail.related('ingredients').updateOrCreateMany(
