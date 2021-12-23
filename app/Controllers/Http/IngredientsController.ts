@@ -103,7 +103,7 @@ export default class IngredientsController {
 
   public async show({ request }: HttpContextContract) {
     const id = request.param('id')
-    return await IngredientsController.getIngredient(id)
+    return await IngredientsController.getAndFormatIngredient(id)
   }
 
   public async update({ request }: HttpContextContract) {
