@@ -20,13 +20,16 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import packageJson from '../package.json'
+import { cocktailUnitsRoute } from './routes/cocktailUnits'
+import { ingredientUnitsRoute } from './routes/ingredientUnits'
 
 Route.get('/', () => {
   const { name, version } = packageJson
   return { name, version }
 })
 
+Route.get('cocktails/units', cocktailUnitsRoute)
+Route.get('ingredients/units', ingredientUnitsRoute)
 Route.resource('techniques', 'TechniquesController').only(['index'])
-Route.resource('units', 'UnitsController').only(['index'])
 Route.resource('ingredients', 'IngredientsController').apiOnly()
 Route.resource('cocktails', 'CocktailsController').apiOnly()
