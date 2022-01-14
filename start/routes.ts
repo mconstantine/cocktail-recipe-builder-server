@@ -31,5 +31,23 @@ Route.get('/', () => {
 Route.get('cocktails/units', cocktailUnitsRoute)
 Route.get('ingredients/units', ingredientUnitsRoute)
 Route.resource('techniques', 'TechniquesController').only(['index'])
-Route.resource('ingredients', 'IngredientsController').apiOnly()
-Route.resource('cocktails', 'CocktailsController').apiOnly()
+
+Route.resource('ingredients', 'IngredientsController')
+  .apiOnly()
+  .middleware({
+    create: ['auth'],
+    store: ['auth'],
+    edit: ['auth'],
+    update: ['auth'],
+    destroy: ['auth'],
+  })
+
+Route.resource('cocktails', 'CocktailsController')
+  .apiOnly()
+  .middleware({
+    create: ['auth'],
+    store: ['auth'],
+    edit: ['auth'],
+    update: ['auth'],
+    destroy: ['auth'],
+  })
