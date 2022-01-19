@@ -31,6 +31,7 @@ Route.get('/', () => {
 Route.get('cocktails/units', cocktailUnitsRoute)
 Route.get('ingredients/units', ingredientUnitsRoute)
 Route.resource('techniques', 'TechniquesController').only(['index'])
+Route.post('users/login', 'UsersController.login')
 
 Route.resource('ingredients', 'IngredientsController')
   .apiOnly()
