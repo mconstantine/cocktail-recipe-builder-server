@@ -20,4 +20,9 @@ export default class UsersController {
       return response.badRequest('Wrong password')
     }
   }
+
+  async logout({ auth, response }: HttpContextContract) {
+    await auth.logout()
+    return response.ok({ message: 'Logged out' })
+  }
 }

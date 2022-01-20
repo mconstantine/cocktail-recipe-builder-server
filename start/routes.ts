@@ -32,6 +32,7 @@ Route.get('cocktails/units', cocktailUnitsRoute)
 Route.get('ingredients/units', ingredientUnitsRoute)
 Route.resource('techniques', 'TechniquesController').only(['index'])
 Route.post('users/login', 'UsersController.login')
+Route.post('users/logout', 'UsersController.logout').middleware('auth')
 
 Route.resource('ingredients', 'IngredientsController')
   .apiOnly()
