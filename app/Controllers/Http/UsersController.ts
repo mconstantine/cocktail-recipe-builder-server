@@ -3,6 +3,8 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import User from 'App/Models/User'
 import UserLoginValidator from 'App/Validators/UserLoginValidator'
 import UserLogoutValidator from 'App/Validators/UserLogoutValidator'
+import UpdateUserValidator from 'App/Validators/UpdateUserValidator'
+import { Exception } from '@adonisjs/core/build/standalone'
 
 export default class UsersController {
   show({ auth }: HttpContextContract) {
@@ -19,7 +21,7 @@ export default class UsersController {
       const token = await auth.use('api').attempt(user.email, data.password)
       return token
     } catch {
-      return response.badRequest('Wrong password')
+      throw new Exception(`Wrong password.`, 400, 'E_UNAUTHORIZED_ACCESS')
     }
   }
 
@@ -36,5 +38,14 @@ export default class UsersController {
     }
 
     return response.ok({ message: 'Logged out' })
+  }
+
+  async update({ auth, request }: HttpContextContract) {
+    const data = await request.validate(UpdateUserValidator)
+
+    auth.user!.password = data.new_password
+    await auth.user!.save()
+
+    return { message: 'Password changed' }
   }
 }

@@ -33,6 +33,7 @@ Route.get('ingredients/units', ingredientUnitsRoute)
 Route.resource('techniques', 'TechniquesController').only(['index'])
 Route.post('users/login', 'UsersController.login')
 Route.post('users/logout', 'UsersController.logout').middleware('auth')
+Route.put('users/update', 'UsersController.update').middleware('auth')
 
 Route.resource('ingredients', 'IngredientsController')
   .apiOnly()
