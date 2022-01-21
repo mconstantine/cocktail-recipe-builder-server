@@ -1,6 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Database from '@ioc:Adonis/Lucid/Database'
 import User from 'App/Models/User'
 import UserLoginValidator from 'App/Validators/UserLoginValidator'
+import UserLogoutValidator from 'App/Validators/UserLogoutValidator'
 
 export default class UsersController {
   show({ auth }: HttpContextContract) {
@@ -21,8 +23,18 @@ export default class UsersController {
     }
   }
 
-  async logout({ auth, response }: HttpContextContract) {
-    await auth.logout()
+  async logout({ auth, request, response }: HttpContextContract) {
+    const data = await request.validate(UserLogoutValidator)
+
+    if (data.logout_from_everywhere) {
+      await Database.query()
+        .from('api_tokens')
+        .where('user_id', auth.user!.id)
+        .delete()
+    } else {
+      await auth.logout()
+    }
+
     return response.ok({ message: 'Logged out' })
   }
 }
