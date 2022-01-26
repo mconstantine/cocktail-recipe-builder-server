@@ -13,7 +13,7 @@ export default class UsersController {
     }
   }
 
-  async login({ auth, request, response }: HttpContextContract) {
+  async login({ auth, request }: HttpContextContract) {
     const data = await request.validate(UserLoginValidator)
     const user = await User.findByOrFail('email', data.email)
 
